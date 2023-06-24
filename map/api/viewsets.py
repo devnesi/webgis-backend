@@ -19,14 +19,12 @@ class MapViewSet(ModelViewSet):
 
     def list(self, request):
         maps = Map.objects.filter(user=request.user)
-        serializer = MapSerializer(maps, many=True)
-        return Response(serializer.data)
+        return Response(MapSerializer(maps, many=True).data)
     
     def retrieve(self, request, pk=None):
         get_object_or_404(Map, pk=pk, user=request.user)
         return super().retrieve(request, pk=pk)
     
-
     def create(self, request):
         request.data['user'] = request.user.id
         return super().create(request)  
