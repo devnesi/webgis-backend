@@ -2,7 +2,7 @@ from rest_framework.viewsets import ModelViewSet
 from map.api.serializers import MapSerializer
 from map.models import Map
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.authentication import TokenAuthentication
+from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.response import Response
 from rest_framework.decorators import action
 from django.shortcuts import get_object_or_404
@@ -14,7 +14,7 @@ class MapViewSet(ModelViewSet):
     queryset= Map.objects.all()
     serializer_class = MapSerializer
     permission_classes = [IsAuthenticated]
-    authentication_classes = [TokenAuthentication]
+    authentication_classes = [TokenAuthentication, SessionAuthentication]
     enabled_methods = ['get', 'post', 'put', 'delete']
 
     def list(self, request):

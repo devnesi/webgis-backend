@@ -1,28 +1,25 @@
 from rest_framework.viewsets import ModelViewSet
-from layer.api.serializers import LayerSerializer
-from layer.models import Layer
+from geometry.api.serializers import GeometrySerializer
+from geometry.models import Geometry
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.response import Response
 from map.models import Map
-from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 
 
 
 class LayerViewSet(ModelViewSet):
-    queryset= Layer.objects.all()
-    serializer_class = LayerSerializer
+    queryset= Geometry.objects.all()
+    serializer_class = GeometrySerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication, SessionAuthentication]
-    filter_backends = [DjangoFilterBackend]
-    filterset_fields = ['map']
     enabled_methods = ['get', 'post', 'put', 'delete']
 
     def list(self, request):
-        layers = Layer.objects.filter(map__user=request.user)
-        return Response(LayerSerializer(layers, many=True).data)
-
+        geometries = Geometry.objects.filter(layer__map__user=request.user)
+        return Response(GeometrySerializer(geometries, many=True).data)
+    """
     def retrieve(self, request, pk=None):
         get_object_or_404(Layer, pk=pk, map__user=request.user)
         return super().retrieve(request, pk=pk)
@@ -39,5 +36,5 @@ class LayerViewSet(ModelViewSet):
     def destroy(self, request, *args, **kwargs):   
         get_object_or_404(Layer, pk=kwargs['pk'], map__user=request.user)
         return super().destroy(request, *args, **kwargs)
-
+    """
         
