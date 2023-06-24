@@ -1,0 +1,9 @@
+This file contains the environment variables that need to be filled out for the program to run. 
+In the example below, they are filled out for local use.
+
+SECRET_KEY = 'ABC'
+DB_NAME = 'postgres'
+DB_USER = 'admin'
+DB_PASSWORD = 'root'
+DB_HOST = 'localhost'
+DB_PORT = '5432
