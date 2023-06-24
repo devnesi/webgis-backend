@@ -18,3 +18,4 @@ class Geometry(models.Model):
         managed = True
         db_table = 'maps_layers_geometries'
         ordering = ['pk']
+        verbose_name_plural = 'Geometries'
