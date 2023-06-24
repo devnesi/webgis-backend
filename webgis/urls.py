@@ -4,6 +4,7 @@ from django.urls import path, include
 from rest_framework import routers
 from map.api.viewsets import MapViewSet
 from layer.api.viewsets import LayerViewSet
+from geometry.api.viewsets import GeometryViewSet
 
 if settings.DEBUG:
     router = routers.DefaultRouter()
@@ -13,6 +14,7 @@ else:
 
 router.register(r'maps', MapViewSet)
 router.register(r'layers', LayerViewSet)
+router.register(r'geometries', GeometryViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls),
