@@ -12,9 +12,9 @@ else:
     router = routers.SimpleRouter()
 
 
-router.register(r'maps', MapViewSet)
-router.register(r'layers', LayerViewSet)
-router.register(r'geometries', GeometryViewSet)
+router.register(r'maps', MapViewSet, basename='maps') 
+router.register(r'layers', LayerViewSet, basename='layers')
+router.register(r'geometries', GeometryViewSet, basename='geometries')
 
 urlpatterns = [
     path('admin/', admin.site.urls),
