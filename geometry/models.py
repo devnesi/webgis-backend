@@ -4,11 +4,6 @@ from layer.models import Layer
 
 
 class Geometry(models.Model):
-    class GeometryType(models.TextChoices):
-        POLYGON = 'PL', ('POLYGON')
-        POINT = 'PO', ('POINT')
-        LINE = 'LN', ('LINE')
-        GEOM = 'GE', ('GEOMETRY')
         
     id_geometry = models.AutoField(primary_key=True)
     layer = models.ForeignKey(Layer, on_delete=models.CASCADE)
