@@ -3,9 +3,9 @@ from layer.api.serializers import LayerSerializer
 from layer.models import Layer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
-from rest_framework.response import Response
 from map.models import Map
 from django_filters.rest_framework import DjangoFilterBackend
+from map.models import Map
 from django.shortcuts import get_object_or_404
 
 class LayerViewSet(ModelViewSet):

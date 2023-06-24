@@ -4,10 +4,15 @@ from map.models import Map
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.response import Response
-from rest_framework.decorators import action
-from django.shortcuts import get_object_or_404
-from django.db import connection
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
+from rest_framework.decorators import action
+from django.db import connection
+from layer.models import Layer
+from geometry.models import Geometry
+import json
+import shapely
+import shapely.ops
 
 class MapViewSet(ModelViewSet):
     serializer_class = MapSerializer
@@ -90,4 +95,28 @@ class MapViewSet(ModelViewSet):
         pbf = self.queryVectorTile(sql)
 
         return HttpResponse(content=pbf.tobytes(), content_type='application/vnd.mapbox-vector-tile')
+    
+
+    @action(methods=['POST'], detail=True, url_path='load')
+    def loadFromGeojson(self, request, pk):
+        map = get_object_or_404(Map, pk=pk, user=request.user)
+
+        file = request.FILES['file']
+        geojson = json.loads(file.read())
+        layer_type = geojson['features'][0]['geometry']['type'].upper()        
+        
+        newLayer = Layer.objects.create(map=map)
+        newLayer.layer_type = layer_type
+        newLayer.save()
+
+        for geom in geojson['features']:
+            
+            newGeometry = Geometry.objects.create(layer=newLayer)
+            
+            loaded = shapely.geometry.shape(geom['geometry'])
+            newGeometry.geom = shapely.ops.transform(lambda x, y, z=None: (x, y), loaded).wkt
+
+            newGeometry.save()            
+            
+        return Response()
         

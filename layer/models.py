@@ -8,13 +8,14 @@ class Layer(models.Model):
         POLYGON = 'POLYGON', ('POLYGON')
         POINT = 'POINT', ('POINT')
         LINE = 'LINESTRING', ('LINESTRING')
+        MULTIPOLYGON = 'MULTIPOLYGON', ('MULTIPOLYGON')
         GEOM = 'GEOM', ('GEOMETRY')
         
     id_layer = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=3000, blank=True, null=True)
+    name = models.CharField(max_length=3000, default='Unnamed Layer')
     enabled = models.BooleanField(blank=False, null=False, default=True)
     map = models.ForeignKey(Map, on_delete=models.CASCADE)
-    layer_type = models.CharField(max_length=10,choices=GeometryType.choices, default=GeometryType.GEOM)
+    layer_type = models.CharField(max_length=12,choices=GeometryType.choices, default=GeometryType.GEOM)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
