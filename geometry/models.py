@@ -1,4 +1,4 @@
-from django.db import models
+from django.contrib.gis.db import models
 from layer.models import Layer
 # Create your models here.
 
@@ -12,6 +12,7 @@ class Geometry(models.Model):
         
     id_geometry = models.AutoField(primary_key=True)
     layer = models.ForeignKey(Layer, on_delete=models.CASCADE)
+    geom = models.GeometryField(blank=True, null=True)
     
     class Meta:
         managed = True
