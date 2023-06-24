@@ -15,7 +15,7 @@ class MapViewSet(ModelViewSet):
     serializer_class = MapSerializer
     permission_classes = [IsAuthenticated]
     authentication_classes = [TokenAuthentication]
-    enabled_methods = ['get']
+    enabled_methods = ['get', 'post', 'put', 'delete']
 
     def list(self, request):
         maps = Map.objects.filter(user=request.user)
@@ -26,6 +26,20 @@ class MapViewSet(ModelViewSet):
         get_object_or_404(Map, pk=pk, user=request.user)
         return super().retrieve(request, pk=pk)
     
+
+    def create(self, request):
+        request.data['user'] = request.user.id
+        return super().create(request)  
+    
+    def update(self, request, *args, **kwargs):
+        get_object_or_404(Map, pk=kwargs['pk'], user=request.user)
+        request.data['user'] = request.user.id
+        return super().update(request, *args, **kwargs)
+
+    def destroy(self, request, *args, **kwargs):   
+        get_object_or_404(Map, pk=kwargs['pk'], user=request.user)
+        return super().destroy(request, *args, **kwargs)
+
     def tileToEnvelope(self, tile):
         worldMercMax = 20037508.3427892
         worldMercMin = -1 * worldMercMax
