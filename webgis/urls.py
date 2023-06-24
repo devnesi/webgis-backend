@@ -6,6 +6,7 @@ from map.api.viewsets import MapViewSet
 from layer.api.viewsets import LayerViewSet
 from geometry.api.viewsets import GeometryViewSet
 from user.api.viewsets import UserViewSet
+from rest_framework.authtoken import views
 if settings.DEBUG:
     router = routers.DefaultRouter()
 else:
@@ -20,4 +21,5 @@ router.register(r'register', UserViewSet, basename='register')
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('', include(router.urls)),
+    path('login/', views.obtain_auth_token)
 ]
