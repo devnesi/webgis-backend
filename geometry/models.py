@@ -16,5 +16,5 @@ class Geometry(models.Model):
     
     class Meta:
         managed = True
-        db_table = 'maps_layers_geometrys'
+        db_table = 'maps_layers_geometries'
         ordering = ['pk']
