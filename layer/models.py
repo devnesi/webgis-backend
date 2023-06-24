@@ -15,6 +15,8 @@ class Layer(models.Model):
     enabled = models.BooleanField(blank=False, null=False, default=True)
     map = models.ForeignKey(Map, on_delete=models.CASCADE)
     layer_type = models.CharField(max_length=2,choices=GeometryType.choices, default=GeometryType.GEOM)
+    created_at = models.DateTimeField(auto_now_add=True, null=True)
+    updated_at = models.DateTimeField(auto_now=True, null=True)
 
     class Meta:
         managed = True
