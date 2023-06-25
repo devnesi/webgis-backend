@@ -15,3 +15,6 @@ class Map(models.Model):
         managed = True
         db_table = 'maps'
         ordering = ['pk']
+
+    def __str__(self):
+        return self.name

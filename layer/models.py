@@ -23,3 +23,6 @@ class Layer(models.Model):
         managed = True
         db_table = 'maps_layers'
         ordering = ['pk']
+    
+    def __str__(self):
+        return self.name

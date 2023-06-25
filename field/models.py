@@ -19,3 +19,6 @@ class Field(models.Model):
         managed = True
         db_table = 'maps_layers_forms_fields'
         ordering = ['pk']
+    
+    def __str__(self):
+        return self.name

@@ -18,3 +18,6 @@ class Value(models.Model):
         managed = True
         db_table = 'maps_layers_forms_fields_values'
         ordering = ['pk']
+
+    def __str__(self):
+        return str(self.id_value)

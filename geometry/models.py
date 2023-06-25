@@ -4,7 +4,6 @@ from layer.models import Layer
 
 
 class Geometry(models.Model):
-        
     id_geometry = models.AutoField(primary_key=True)
     layer = models.ForeignKey(Layer, on_delete=models.CASCADE)
     geom = models.GeometryField(blank=True, null=True)
@@ -16,3 +15,6 @@ class Geometry(models.Model):
         db_table = 'maps_layers_geometries'
         ordering = ['pk']
         verbose_name_plural = 'Geometries'
+    
+    def __str__(self):
+        return str(self.id_geometry)
