@@ -48,6 +48,9 @@ INSTALLED_APPS = [
     'map',
     'layer',
     'geometry',
+    'form',
+    'field',
+    'value',
     'django_filters'
 ]
 

@@ -11,7 +11,6 @@ class Geometry(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
 
-    
     class Meta:
         managed = True
         db_table = 'maps_layers_geometries'
