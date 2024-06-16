@@ -82,8 +82,6 @@ class LayerViewSet(ModelViewSet):
     
     @action(methods=['GET'], detail=True, url_path='vectortiles/(?P<z>\d+)/(?P<x>\d+)/(?P<y>\d+).pbf', permission_classes=[], authentication_classes=[TokenAuthentication])
     def getVectorTile(self, request, pk, x ,y, z):
-
-        print(request.user)
         get_object_or_404(Layer, pk=pk, map__user=request.user.pk)
 
         tile =  {   
