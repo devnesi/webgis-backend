@@ -1,7 +1,7 @@
 from rest_framework.viewsets import ModelViewSet
 from layer.api.serializers import LayerSerializer
 from layer.models import Layer
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from map.models import Map
 from django_filters.rest_framework import DjangoFilterBackend
@@ -18,8 +18,21 @@ class LayerViewSet(ModelViewSet):
     filterset_fields = ['map']
     enabled_methods = ['get', 'post', 'put', 'delete']
 
+    def get_permissions(self):
+        if self.action == 'list':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
-        return Layer.objects.filter(map__user=self.request.user)
+        map_id = self.request.query_params.get('map', None)
+        if map_id:
+            return Layer.objects.filter(map_id=map_id)
+        elif self.request.user.is_authenticated:
+            return Layer.objects.filter(map__user=self.request.user)
+        else:
+            return Layer.objects.none()
 
     def create(self, request):
         get_object_or_404(Map, pk=request.data['map'], user=request.user)
