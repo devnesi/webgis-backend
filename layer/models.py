@@ -1,5 +1,6 @@
 from django.db import models
 from map.models import Map
+from django.db.models import JSONField 
 # Create your models here.
 
 
@@ -18,6 +19,7 @@ class Layer(models.Model):
     layer_type = models.CharField(max_length=12,choices=GeometryType.choices, default=GeometryType.GEOM)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
+    style = JSONField(default=dict)
 
     class Meta:
         managed = True
