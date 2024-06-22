@@ -1,13 +1,15 @@
 from rest_framework.viewsets import ModelViewSet
 from map.api.serializers import MapSerializer
 from map.models import Map
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.response import Response
 from django.shortcuts import get_object_or_404
 from rest_framework.decorators import action
 from layer.models import Layer
 from geometry.models import Geometry
+from django.db import connection
+from django.http import JsonResponse
 import json
 import shapely
 import shapely.ops
@@ -18,8 +20,19 @@ class MapViewSet(ModelViewSet):
     authentication_classes = [TokenAuthentication, SessionAuthentication]
     enabled_methods = ['get', 'post', 'put', 'delete']
 
+    def get_permissions(self):       
+        if self.action == 'retrieve' or self.action == 'getBbox':
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
-        return Map.objects.filter(user=self.request.user)
+        print(self.request.user.is_authenticated)
+        if self.request.user.is_authenticated:
+            return Map.objects.filter(user=self.request.user)
+        else:
+            return Map.objects.all()
     
     def create(self, request):
         request.data['user'] = request.user.id
@@ -54,4 +67,14 @@ class MapViewSet(ModelViewSet):
             newGeometry.save()            
             
         return Response()
+   
+    @action(methods=['GET'], detail=True, url_path='bbox')
+    def getBbox(self, request, pk):
+        get_object_or_404(Map, pk=pk)
         
+        with connection.cursor() as cursor:
+            cursor.execute("SELECT ST_Extent(geom) AS bbox FROM maps_layers_geometries where layer_id in (select id_layer from maps_layers ml where map_id = 3)".format(pk=pk))
+            row = cursor.fetchone()
+            result = row[0]
+
+        return JsonResponse({"bbox":result})
