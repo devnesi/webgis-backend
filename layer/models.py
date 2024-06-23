@@ -21,6 +21,7 @@ class Layer(models.Model):
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     style = JSONField(default=dict)
+    order = models.IntegerField(null=True, blank=True)
 
     class Meta:
         managed = True
