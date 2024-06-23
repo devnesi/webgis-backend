@@ -1,5 +1,5 @@
 from rest_framework.viewsets import ModelViewSet
-from layer.api.serializers import LayerSerializer
+from layer.api.serializers import LayerSerializer, OrdersPayloadSerializer
 from layer.models import Layer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
@@ -7,7 +7,7 @@ from map.models import Map
 from django_filters.rest_framework import DjangoFilterBackend
 from django.shortcuts import get_object_or_404
 from django.db import connection
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponseBadRequest
 from rest_framework.decorators import action
 
 class LayerViewSet(ModelViewSet):
@@ -55,3 +55,19 @@ class LayerViewSet(ModelViewSet):
             result = row[0]
 
         return JsonResponse({"bbox":result})
+
+    @action(methods=['POST'], detail=False, url_path='updateOrder')
+    def updateOrder(self, request):
+        serializer = OrdersPayloadSerializer(data=request.data)
+        if serializer.is_valid():
+            orders = serializer.validated_data['orders']
+            for order in orders:
+                id_layer = order['id_layer']
+                layer_order = order['order']
+                
+                layer = get_object_or_404(Layer, id_layer=id_layer)
+                layer.order = layer_order
+                layer.save()
+            return JsonResponse({'status': 'orders processed'})
+        return HttpResponseBadRequest()
+        
