@@ -6,18 +6,16 @@ from django.db.models import JSONField
 
 class Layer(models.Model):
     class GeometryType(models.TextChoices):
-        POLYGON = 'POLYGON', ('POLYGON')
-        POINT = 'POINT', ('POINT')
-        LINE = 'LINESTRING', ('LINESTRING')
-        MULTIPOLYGON = 'MULTIPOLYGON', ('MULTIPOLYGON')
-        MULTILINESTRING = 'MULTILINESTRING', ('MULTILINESTRING')
-        GEOM = 'GEOM', ('GEOMETRY')
+        Polygon = 'Polygon', ('Polygon')
+        Point = 'Point', ('Point')
+        LineString = 'LineString', ('LineString')
+        Geom = 'Geom', ('Geometry')
         
     id_layer = models.AutoField(primary_key=True)
     name = models.CharField(max_length=3000, default='Unnamed Layer')
     enabled = models.BooleanField(blank=False, null=False, default=True)
     map = models.ForeignKey(Map, on_delete=models.CASCADE)
-    layer_type = models.CharField(max_length=15,choices=GeometryType.choices, default=GeometryType.GEOM)
+    layer_type = models.CharField(max_length=15,choices=GeometryType.choices, default=GeometryType.Geom)
     created_at = models.DateTimeField(auto_now_add=True, null=True)
     updated_at = models.DateTimeField(auto_now=True, null=True)
     style = JSONField(default=dict)
