@@ -25,7 +25,7 @@ class GeometryViewSet(ModelViewSet):
         return Geometry.objects.filter(layer__map__user=self.request.user)
 
     def validateGeometryType(self, typeGeometryFront, typeGeometryBack):
-        return (typeGeometryFront.upper().strip() != typeGeometryBack)
+        return (typeGeometryFront.upper().strip() != typeGeometryBack.upper())
     
     
     def create(self, request):
@@ -39,7 +39,7 @@ class GeometryViewSet(ModelViewSet):
     def update(self, request, *args, **kwargs):
         geometry = get_object_or_404(Geometry, pk=kwargs['pk'], layer__map__user=request.user)
         request.data['layer'] = geometry.layer.pk
-
+      
         if(self.validateGeometryType(request.data['geom']['type'], geometry.layer.layer_type)):
             return Response(status=400, data={'message': 'Invalid geometry type'})
         
