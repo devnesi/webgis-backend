@@ -28,7 +28,6 @@ class MapViewSet(ModelViewSet):
         return [permission() for permission in permission_classes]
 
     def get_queryset(self):
-        print(self.request.user.is_authenticated)
         if self.request.user.is_authenticated:
             return Map.objects.filter(user=self.request.user)
         else:

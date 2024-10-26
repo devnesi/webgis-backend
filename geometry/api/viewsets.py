@@ -4,7 +4,7 @@ from geometry.models import Geometry
 from form.models import Form
 from field.models import Field
 from value.models import Value
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.authentication import TokenAuthentication, SessionAuthentication
 from rest_framework.response import Response
 from layer.models import Layer
@@ -21,8 +21,18 @@ class GeometryViewSet(ModelViewSet):
     filterset_fields = ['layer']
     enabled_methods = ['get', 'post', 'put', 'delete']
 
+    def get_permissions(self):       
+        if self.action == 'retrieve' or self.action == 'getValues' :
+            permission_classes = [AllowAny]
+        else:
+            permission_classes = [IsAuthenticated]
+        return [permission() for permission in permission_classes]
+
     def get_queryset(self):
-        return Geometry.objects.filter(layer__map__user=self.request.user)
+        if self.request.user.is_authenticated:
+            return Geometry.objects.filter(layer__map__user=self.request.user)
+        else:
+            return Geometry.objects.all()
 
     def validateGeometryType(self, typeGeometryFront, typeGeometryBack):
         return (typeGeometryFront.upper().strip() != typeGeometryBack.upper())
@@ -59,7 +69,7 @@ class GeometryViewSet(ModelViewSet):
             for field in fields:
                 value, created = Value.objects.get_or_create(geometry=geometry, field=field)
                 
-                if(created == True):
+                if(created == False):
                     value.save()
 
                 values_on_form.append({
