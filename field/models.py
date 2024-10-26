@@ -8,7 +8,7 @@ class Field(models.Model):
         String = 'String', ('String')
         
     id_field = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=3000, default='Unnamed Form')
+    name = models.CharField(max_length=3000, default='Unnamed Field')
     form = models.ForeignKey(Form, on_delete=models.CASCADE)  
     type = models.CharField(max_length=6,choices=FieldType.choices, default=FieldType.String)
     created_at = models.DateTimeField(auto_now_add=True, null=True)

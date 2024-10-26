@@ -73,7 +73,7 @@ class MapViewSet(ModelViewSet):
         get_object_or_404(Map, pk=pk)
         
         with connection.cursor() as cursor:
-            cursor.execute("SELECT ST_Extent(geom) AS bbox FROM maps_layers_geometries where layer_id in (select id_layer from maps_layers ml where map_id = 3)".format(pk=pk))
+            cursor.execute("SELECT ST_Extent(geom) AS bbox FROM maps_layers_geometries where layer_id in (select id_layer from maps_layers ml where enabled = true and  map_id = "+str(pk)+")")
             row = cursor.fetchone()
             result = row[0]
 
