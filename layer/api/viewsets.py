@@ -35,8 +35,15 @@ class LayerViewSet(ModelViewSet):
             return Layer.objects.none()
 
     def create(self, request):
-        get_object_or_404(Map, pk=request.data['map'], user=request.user)
-        return super().create(request)  
+        map = get_object_or_404(Map, pk=request.data['map'], user=request.user)
+
+        lastLayer = Layer.objects.filter(map=map).order_by('-order').first()
+        if(lastLayer is not None):
+            request.data['order'] = lastLayer.order + 1
+        else:  
+            request.data['order'] = 1
+            
+        return  super().create(request)  
     
     def update(self, request, *args, **kwargs):
         layer = get_object_or_404(Layer, pk=kwargs['pk'], map__user=request.user)
